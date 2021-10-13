@@ -167,7 +167,7 @@ if __name__ == '__main__':
 
     print(len(filenamelist), cls20_label.shape, features.shape)    # 10582, (10582, 20), (10582, 4096)
 
-
+    # print(features)
     all_class_kmeans_label = []
     for i in range(20):
         filename_idx_list = filename_idx_class_dict[i]
@@ -175,13 +175,13 @@ if __name__ == '__main__':
         class_feature_list = []
         for idx in filename_idx_list:
             class_feature_list.append(features[idx])
+            
         print('Class {}: {}'.format(i, len(class_feature_list)))
 
         # apply kmeans
         X = class_feature_list
         k_cluster = args.k_cluster
         max_iter = 300
-
         k_center = KMeans(n_clusters=k_cluster, random_state=0, max_iter=max_iter).fit(X)
         labels = k_center.labels_
         centers = k_center.cluster_centers_

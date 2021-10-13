@@ -182,7 +182,7 @@ if __name__ == '__main__':
     timer = pyutils.Timer("Session started: ")
 
 
-    parent_labels = np.load('./voc12/cls_labels.npy').tolist()
+    parent_labels = np.load('./voc12/cls_labels.npy', allow_pickle = True).tolist()
     k_cluster = 10
 
 

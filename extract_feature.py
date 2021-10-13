@@ -60,9 +60,9 @@ if __name__ == '__main__':
                                                         imutils.HWC_to_CHW
                                                         ]))
 
-    infer_data_loader = DataLoader(infer_dataset, shuffle=False, num_workers=args.num_workers, pin_memory=True)
+    infer_data_loader = DataLoader(infer_dataset, shuffle=True, num_workers=args.num_workers, pin_memory=True)
 
-    n_gpus = torch.cuda.device_count()
+    n_gpus = 1#torch.cuda.device_count()
     model_replicas = torch.nn.parallel.replicate(model, list(range(n_gpus)))
 
     filename_list = []
@@ -72,7 +72,7 @@ if __name__ == '__main__':
 
     for iter, (img_name, img_list, label) in enumerate(infer_data_loader):
         img_name = img_name[0]
-
+        # print('normal', img_name)
         filename_list.append(img_name)
 
         # extract feature
@@ -83,6 +83,10 @@ if __name__ == '__main__':
 
         feature = feature[0].cpu().detach().numpy()
         image_feature_list.append(feature)
+
+        feature_sum = np.sum(feature)
+        # if np.isnan(feature_sum): print('nan', img_name)
+        # print(feature)
 
         if iter % 500 == 0:
             print('Already extracted: {}/{}'.format(iter, len(infer_data_loader)))
