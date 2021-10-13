@@ -1,4 +1,7 @@
 # Weakly-Supervised Semantic Segmentation via Sub-category Exploration
+
+Forked from https://github.com/Juliachang/SC-CAM
+
 ![outline](teaser.png)
 
 
