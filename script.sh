@@ -27,30 +27,34 @@ python create_pseudo_label.py --save_folder ${save_folder} --k_cluster 10 --for_
 # Train the classifier
 python train_cls.py --lr 0.01 --voc12_root ${dataset_folder} --weights ${pretrained_model} --round_nb 1 --save_folder ${save_folder}
 
+echo "************************************************************* DONE ROUND ONE *************************************************************"
 
+## R2
+# Extract the feature
+python extract_feature.py --weights ${R2_extractor_model} --infer_list ./voc12/train_aug.txt --voc12_root ${dataset_folder} --save_folder ${save_folder} --k_cluster 10 --from_round_nb 1
+# Generate the pseudo label
+python create_pseudo_label.py --save_folder ${save_folder} --k_cluster 10 --for_round_nb 2
+# Train the classifier
+python train_cls.py --lr 0.01 --voc12_root ${dataset_folder} --weights ${pretrained_model} --round_nb 2 --save_folder ${save_folder}
 
-# ## R2
-# # Extract the feature
-# python extract_feature.py --weights ${R2_extractor_model} --infer_list ./voc12/train_aug_1.txt --voc12_root ${dataset_folder} --save_folder ${save_folder} --k_cluster 10 --from_round_nb 1
-# # Generate the pseudo label
-# python create_pseudo_label.py --save_folder ${save_folder} --k_cluster 10 --for_round_nb 2
-# # Train the classifier
-# python train_cls.py --lr 0.01 --voc12_root ${dataset_folder} --weights ${pretrained_model} --round_nb 2 --save_folder ${save_folder}
+echo "************************************************************* DONE ROUND TWO *************************************************************"
 
+## R3
+# Extract the feature
+python extract_feature.py --weights ${R3_extractor_model} --infer_list ./voc12/train_aug.txt --voc12_root ${dataset_folder} --save_folder ${save_folder} --k_cluster 10 --from_round_nb 2
+# Generate the pseudo label
+python create_pseudo_label.py --save_folder ${save_folder} --k_cluster 10 --for_round_nb 3
+# Train the classifier
+python train_cls.py --lr 0.01 --voc12_root ${dataset_folder} --weights ${pretrained_model} --round_nb 3 --save_folder ${save_folder}
 
+echo "************************************************************* DONE ROUND THREE *************************************************************"
 
-# ## R3
-# # Extract the feature
-# python extract_feature.py --weights ${R3_extractor_model} --infer_list ./voc12/train_aug_1.txt --voc12_root ${dataset_folder} --save_folder ${save_folder} --k_cluster 10 --from_round_nb 2
-# # Generate the pseudo label
-# python create_pseudo_label.py --save_folder ${save_folder} --k_cluster 10 --for_round_nb 3
-# # Train the classifier
-# python train_cls.py --lr 0.01 --voc12_root ${dataset_folder} --weights ${pretrained_model} --round_nb 3 --save_folder ${save_folder}
+echo "************************************************************* STARTING INFER *************************************************************"
 
+## Infer the classifier and generate the response map with the final model
+python infer_cls.py --infer_list voc12/train.txt --voc12_root ${dataset_folder} --weights ${final_model} --save_path ${save_cam_folder} --save_out_cam 1 --k_cluster 10 --round_nb 3
 
-
-# ## Infer the classifier and generate the response map with the final model
-# python infer_cls.py --infer_list voc12/train.txt --voc12_root ${dataset_folder} --weights ${final_model} --save_path ${save_cam_folder} --save_out_cam 1 --k_cluster 10 --round_nb 3
+echo "************************************************************* DONE INFER *************************************************************"
 
 #torch===1.7.1+cu110 torchvision===0.8.2+cu110
 #pip install torch===1.7.1+cu110 torchvision===0.8.2+cu110 torchaudio===0.7.2 -f https://download.pytorch.org/whl/torch_stable.html

@@ -2,3 +2,5 @@ dataset/
 save/
 weights/
 voc12
+resnet_cls.log
+testdata.txt

@@ -5,7 +5,7 @@ from PIL import Image
 import shutil
 import scipy.misc
 import math
-
+import imageio
 
 
 def create_class_key_in_dict(dict, cls_nb):
@@ -541,7 +541,7 @@ def cls200_cam_to_cls20_entropy(no_norm_cam_200, k_cluster, norm_cam, save_path,
         if save_entropy_heatmap == 1:
             if i in gt_cat:
                 hm, heatmap = draw_heatmap(orig_img, entropy_norm)
-                scipy.misc.imsave('{}/entropy/cls_200/{}/{}_{}.png'.format(save_path, img_name, img_name, i), heatmap)
+                imageio.imwrite('{}/entropy/cls_200/{}/{}_{}.png'.format(save_path, img_name, img_name, i), heatmap)
 
     return entropy_npy
 
@@ -573,7 +573,7 @@ def draw_single_heatmap(norm_cam, gt_label, orig_img, save_path, img_name):
     for i, gt in enumerate(gt_cat):
         hm, heatmap = draw_heatmap_array(orig_img, norm_cam[gt])
         cam_viz_path = os.path.join(save_path,'heatmap/cls_20', img_name + '_{}.png'.format(gt))
-        scipy.misc.imsave(cam_viz_path, heatmap)
+        imageio.imwrite(cam_viz_path, heatmap)
 
         norm_cam_gt = norm_cam[gt]
         norm_cam_gt[norm_cam_gt<=0.15]=0
@@ -607,7 +607,7 @@ def draw_heatmap_cls200_merge(norm_cam, gt_label, orig_img, img_name):
     heatmap_list = []
     for i, gt in enumerate(gt_cat):
         hm, heatmap = draw_heatmap_array(orig_img, norm_cam[gt])
-        scipy.misc.imsave('/home/julia/julia_data/wsss/best/heatmap/cls_200/merge_{}.png'.format(img_name), heatmap)
+        imageio.imwrite('/home/julia/julia_data/wsss/best/heatmap/cls_200/merge_{}.png'.format(img_name), heatmap)
         heatmap = np.transpose(heatmap, (2, 1, 0))
         heatmap_list.append(heatmap)
 
